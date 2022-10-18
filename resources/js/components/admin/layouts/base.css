@@ -273,6 +273,7 @@ nav {
     position: relative;
     padding: 5px 15px;
     margin-bottom: 5px;
+    cursor: pointer;
 }
 
 .sub_nav--list {

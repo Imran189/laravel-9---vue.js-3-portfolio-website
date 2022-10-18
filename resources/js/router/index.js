@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeAdminView from "../components/admin/home/index.vue";
 import HomeIndexView from "../components/pages/home/index.vue";
 import LoginView from "../components/auth/login.vue";
-
+import AboutView from "../components/admin/about/index.vue";
 import notFound from "../components/notFound.vue";
 
 const router = createRouter({
@@ -30,6 +30,14 @@ const router = createRouter({
             component: LoginView,
             meta: {
                 requiresAuth: false,
+            },
+        },
+        {
+            path: "/admin/about",
+            name: "AboutView",
+            component: AboutView,
+            meta: {
+                requiresAuth: true,
             },
         },
         {

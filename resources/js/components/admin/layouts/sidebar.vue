@@ -1,3 +1,12 @@
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const about = () => {
+    router.push({ name: "AboutView" });
+};
+</script>
 <template>
     <!-- Nav Main -->
     <nav class="nav">
@@ -7,15 +16,15 @@
             </span>
             <ul class="nav_list">
                 <li class="nav_item">
-                    <a class="nav_link nav__active" href="#">
+                    <router-link class="nav_link nav__active" to="/admin/home">
                         <span class="nav_link--span--icon">
                             <i class="fas fa-home nav__link--icon"> </i>
                         </span>
                         <span class="nav_link--span--navname"> Home </span>
-                    </a>
+                    </router-link>
                 </li>
                 <li class="nav_item">
-                    <a class="nav_link" href="about.html">
+                    <a class="nav_link" @click.prevent="about">
                         <span class="nav_link--span--icon">
                             <i class="fas fa-home nav__link--icon"> </i>
                         </span>
@@ -103,7 +112,5 @@
     </nav>
     <!-- End Nav Main -->
 </template>
-<script>
-export default {};
-</script>
+
 <style scoped></style>

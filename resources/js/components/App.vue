@@ -6,8 +6,4 @@
 export default {};
 </script>
 
-<style>
-body {
-    background-color: rgb(186, 221, 210);
-}
-</style>
+<style></style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="homePage">
         <h1>Welcome to the home page website</h1>
         <router-link to="/admin/home">Admin dashboard</router-link><br />
         <router-link to="/admin/login">Admin login</router-link>
@@ -10,9 +10,10 @@
 export default {};
 </script>
 
-<style>
-.home {
+<style scoped>
+.homePage {
+    height: 100vh;
     text-align: center;
-    margin-top: 20px;
+    background-color: rgb(187, 226, 213);
 }
 </style>

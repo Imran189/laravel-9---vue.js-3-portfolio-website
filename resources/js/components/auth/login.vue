@@ -31,17 +31,23 @@ const login = async () => {
 
             <form @submit.prevent="login">
                 <input
+                    class="input_auth"
                     type="email"
                     placeholder="Enter Your Email"
                     v-model="form.email"
                 /><br /><br />
                 <input
+                    class="input_auth"
                     type="password"
                     placeholder="Enter Your Password"
                     v-model="form.password"
                 /><br /><br />
 
-                <input type="submit" value="Login" class="submit" /><br />
+                <input
+                    type="submit"
+                    value="Login"
+                    class="input_auth submit"
+                /><br />
             </form>
         </div>
     </div>
@@ -67,7 +73,7 @@ const login = async () => {
     justify-content: center;
 }
 
-input {
+.input_auth {
     background: rgb(233, 227, 227);
     background-position: 0.5em 0.6em;
     border: none;
@@ -78,10 +84,10 @@ input {
     outline: none;
     transition: background-color 0.4s;
 }
-input:hover {
+.input_auth:hover {
     background-color: rgb(193, 221, 212);
 }
-input:focus {
+.input_auth:focus {
     background-color: wheat;
 }
 .submit {
