@@ -1,6 +1,6 @@
 <script setup>
 import BaseLayout from "../layouts/baseLayout.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive, toDisplayString } from "vue";
 import axios from "axios";
 
 let form = ref({
@@ -21,7 +21,7 @@ onMounted(async () => {
 const getAbout = async () => {
     let response = await axios.get("/api/edit_about");
     form.value = response.data;
-    console.log(response);
+    //console.log(response);
 };
 
 const getPhoto = () => {
@@ -42,7 +42,46 @@ const changePhoto = (e) => {
     let limit = 1024 * 1024 * 2;
 
     if (file["size"] > limit) {
+        swal({
+            icon: "error",
+            title: "Ooopps..",
+            text: "You are uploading a large file",
+        });
+        return false;
     }
+    reader.onloadend = (file) => {
+        form.value.photo = reader.result;
+    };
+    reader.readAsDataURL(file);
+};
+
+const uploadCv = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    let limit = 1024 * 1024 * 2;
+
+    if (file["size"] > limit) {
+        swal({
+            icon: "error",
+            title: "Ooopps..",
+            text: "You are uploading a large file",
+        });
+        return false;
+    }
+    reader.onloadend = (file) => {
+        form.value.cv = reader.result;
+    };
+    reader.readAsDataURL(file);
+};
+const updateAbout = async () => {
+    await axios
+        .post(`/api/update_about/${form.value.id}`, form.value)
+        .then((response) => {
+            toast.fire({
+                icon: "Success",
+                title: "Update about success",
+            });
+        });
 };
 </script>
 
@@ -63,7 +102,10 @@ const changePhoto = (e) => {
                                 <h1>About Us</h1>
                             </div>
                             <div class="titlebar_item">
-                                <div class="btn btn-secondary">
+                                <div
+                                    class="btn btn-secondary"
+                                    @click.prevent="updateAbout"
+                                >
                                     Save Changes
                                 </div>
                             </div>
@@ -127,19 +169,26 @@ const changePhoto = (e) => {
                                     <input
                                         type="file"
                                         id="fileimg"
-                                        @change="changePhoto()"
+                                        @change="changePhoto"
                                     />
                                 </div>
                                 <div class="card">
                                     <p>CV</p>
-                                    <input type="file" id="filecv" />
+                                    <input
+                                        type="file"
+                                        id="filecv"
+                                        @change="uploadCv"
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div class="titlebar">
                             <div class="titlebar_item"></div>
                             <div class="titlebar_item">
-                                <div class="btn btn-secondary">
+                                <div
+                                    class="btn btn-secondary"
+                                    @click.prevent="updateAbout"
+                                >
                                     Save Changes
                                 </div>
                             </div>
