@@ -1,5 +1,49 @@
 <script setup>
 import BaseLayout from "../layouts/baseLayout.vue";
+import { onMounted, ref } from "vue";
+import axios from "axios";
+
+let form = ref({
+    name: "",
+    photo: "",
+    email: "",
+    phone: "",
+    address: "",
+    description: "",
+    tagline: "",
+    cv: "",
+});
+
+onMounted(async () => {
+    getAbout();
+});
+
+const getAbout = async () => {
+    let response = await axios.get("/api/edit_about");
+    form.value = response.data;
+    console.log(response);
+};
+
+const getPhoto = () => {
+    let photo = "/img/avatar.png";
+    if (form.value.photo) {
+        if (form.value.photo.indexOf("base64") != -1) {
+            photo = form.value.photo;
+        } else {
+            photo = "/img/upload/" + form.value.photo;
+        }
+    }
+    return photo;
+};
+
+const changePhoto = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    let limit = 1024 * 1024 * 2;
+
+    if (file["size"] > limit) {
+    }
+};
 </script>
 
 <template>
@@ -28,23 +72,47 @@ import BaseLayout from "../layouts/baseLayout.vue";
                             <div class="wrapper_left">
                                 <div class="card">
                                     <p>Full Name</p>
-                                    <input type="text" class="input" />
+                                    <input
+                                        type="text"
+                                        class="input"
+                                        v-model="form.name"
+                                    />
 
                                     <p>Email</p>
-                                    <input type="email" class="input" />
+                                    <input
+                                        type="email"
+                                        class="input"
+                                        v-model="form.email"
+                                    />
 
                                     <p>Phone</p>
-                                    <input type="text" class="input" />
+                                    <input
+                                        type="text"
+                                        class="input"
+                                        v-model="form.phone"
+                                    />
 
                                     <p>Address</p>
-                                    <input type="text" class="input" />
+                                    <input
+                                        type="text"
+                                        class="input"
+                                        v-model="form.address"
+                                    />
 
                                     <p>Description</p>
-                                    <textarea cols="10" rows="5"></textarea>
+                                    <textarea
+                                        cols="10"
+                                        rows="5"
+                                        v-model="form.description"
+                                    ></textarea>
                                 </div>
                                 <div class="card">
                                     <p>Tagline</p>
-                                    <input type="text" class="input" />
+                                    <input
+                                        type="text"
+                                        class="input"
+                                        v-model="form.tagline"
+                                    />
                                 </div>
                             </div>
 
@@ -52,12 +120,15 @@ import BaseLayout from "../layouts/baseLayout.vue";
                                 <div class="card">
                                     <div class="avatar_profile">
                                         <img
-                                            src="/assets/img/avatar.jpg"
-                                            alt=""
+                                            :src="getPhoto()"
                                             class="avatar_profile_img"
                                         />
                                     </div>
-                                    <input type="file" id="fileimg" />
+                                    <input
+                                        type="file"
+                                        id="fileimg"
+                                        @change="changePhoto()"
+                                    />
                                 </div>
                                 <div class="card">
                                     <p>CV</p>
