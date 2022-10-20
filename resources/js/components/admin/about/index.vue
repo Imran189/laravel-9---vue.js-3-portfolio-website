@@ -78,7 +78,7 @@ const updateAbout = async () => {
         .post(`/api/update_about/${form.value.id}`, form.value)
         .then((response) => {
             toast.fire({
-                icon: "Success",
+                icon: "success",
                 title: "Update about success",
             });
         });
