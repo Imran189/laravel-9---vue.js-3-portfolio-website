@@ -1,5 +1,45 @@
 <script setup>
 import Base from "../layouts/baseLayout.vue";
+import { onMounted, ref } from "vue";
+import axios from "axios";
+
+let services = ref([]);
+
+const showModal = ref(false);
+const hideModal = ref(true);
+
+const form = ref({
+    name: "",
+    icon: "",
+    description: "",
+});
+onMounted(async () => {
+    getService();
+});
+
+const getService = async () => {
+    let response = await axios.get("/api/get_all_service");
+    //console.log("response", response);
+    services.value = response.data.services;
+};
+
+const openModal = () => {
+    showModal.value = !showModal.value;
+};
+const closeModal = () => {
+    showModal.value = !hideModal.value;
+};
+
+const createService = async () => {
+    await axios.post("/api/create_service", form.value).then((response) => {
+        getService();
+        closeModal();
+        toast.fire({
+            icon: "success",
+            title: "Service added successfully",
+        });
+    });
+};
 </script>
 
 <template>
@@ -18,7 +58,10 @@ import Base from "../layouts/baseLayout.vue";
                                 <h1>Services</h1>
                             </div>
                             <div class="titlebar_item">
-                                <div class="btn btn__open--modal">
+                                <div
+                                    class="btn btn__open--modal"
+                                    @click="openModal()"
+                                >
                                     New Service
                                 </div>
                             </div>
@@ -70,41 +113,18 @@ import Base from "../layouts/baseLayout.vue";
                                 <p>Description</p>
                                 <p>Actions</p>
                             </div>
-                            <!-- item 1 -->
-                            <div class="service_table-items">
-                                <p>Backend Developer</p>
+                            <!-- items -->
+                            <div
+                                class="service_table-items"
+                                v-for="item in services"
+                                :key="item.id"
+                            >
+                                <p>{{ item.name }}</p>
                                 <button class="service_table-icon">
-                                    <i class="fas fa-pencil-alt"></i>
+                                    <i class="{{item.icon}}"></i>
                                 </button>
-                                <p>
-                                    Sapiente odit ut ipsam neque dolorum et.
-                                    Officiis error dicta pariatur quidem. Saepe
-                                    dignissimos et at error dolores asperiores.
-                                    Earum id sed ratione ducimus enim voluptate
-                                    praesentium.
-                                </p>
-                                <div>
-                                    <button class="btn-icon success">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </button>
-                                    <button class="btn-icon danger">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- item 2 -->
-                            <div class="service_table-items">
-                                <p>Backend Developer</p>
-                                <button class="service_table-icon">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </button>
-                                <p>
-                                    Sapiente odit ut ipsam neque dolorum et.
-                                    Officiis error dicta pariatur quidem. Saepe
-                                    dignissimos et at error dolores asperiores.
-                                    Earum id sed ratione ducimus enim voluptate
-                                    praesentium.
-                                </p>
+                                <p>{{ item.description }}</p>
+
                                 <div>
                                     <button class="btn-icon success">
                                         <i class="fas fa-pencil-alt"></i>
@@ -117,42 +137,59 @@ import Base from "../layouts/baseLayout.vue";
                         </div>
                     </div>
                     <!-------------- SERVICES MODAL --------------->
-                    <div class="modal main__modal">
+                    <div class="modal main__modal" :class="{ show: showModal }">
                         <div class="modal__content">
-                            <span class="modal__close btn__close--modal"
+                            <span
+                                class="modal__close btn__close--modal"
+                                @click="closeModal()"
                                 >×</span
                             >
                             <h3 class="modal__title">Add Service</h3>
                             <hr class="modal_line" />
                             <br />
-                            <div>
-                                <p>Service Name</p>
-                                <input type="text" class="input" />
+                            <form @submit.prevent="createService()">
+                                <div>
+                                    <p>Service Name</p>
+                                    <input
+                                        type="text"
+                                        class="input"
+                                        v-model="form.name"
+                                    />
 
-                                <p>Icon Class</p>
-                                <input type="text" class="input" />
-                                <span style="color: #006fbb"
-                                    >Find your suitable icon: Font Awesome</span
-                                >
+                                    <p>Icon Class</p>
+                                    <input
+                                        type="text"
+                                        class="input"
+                                        v-model="form.icon"
+                                    />
+                                    <span style="color: #006fbb"
+                                        >Find your suitable icon: Font
+                                        Awesome</span
+                                    >
 
-                                <p>Description</p>
-                                <textarea cols="10" rows="5"></textarea>
-                            </div>
-                            <br />
-                            <hr class="modal_line" />
-                            <div class="model__footer">
-                                <button
-                                    class="btn mr-2 btn__close--modal"
-                                    @click="closeModal()"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    class="btn btn-secondary btn__close--modal"
-                                >
-                                    Save
-                                </button>
-                            </div>
+                                    <p>Description</p>
+                                    <textarea
+                                        cols="10"
+                                        rows="5"
+                                        v-model="form.description"
+                                    ></textarea>
+                                </div>
+                                <br />
+                                <hr class="modal_line" />
+                                <div class="model__footer">
+                                    <button
+                                        class="btn mr-2 btn__close--modal"
+                                        @click="closeModal()"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        class="btn btn-secondary btn__close--modal"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </section>
