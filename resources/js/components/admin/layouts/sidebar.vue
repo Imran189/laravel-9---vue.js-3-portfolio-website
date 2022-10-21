@@ -40,7 +40,7 @@ const about = () => {
                     </router-link>
                 </li>
                 <li class="nav_item">
-                    <router-link to="/admin/skills/" class="nav_link">
+                    <router-link to="/admin/skills" class="nav_link">
                         <span class="nav_link--span--icon">
                             <i class="fas fa-home nav__link--icon"> </i>
                         </span>

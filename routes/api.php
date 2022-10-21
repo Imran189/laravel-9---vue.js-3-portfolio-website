@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AboutController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\API\ServiceController;
+use App\Http\Controllers\API\SkillsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +29,7 @@ Route::get('get_all_service','get_all_service');
 Route::post('create_service','create_service');
 Route::post('/update_service/{id}','update_service');
 Route::get('/delete_service/{id}','delete_service');
+});
+Route::controller(SkillsController::class)->group(function(){
+Route::get('get_all_skills','get_all_skills');
 });
