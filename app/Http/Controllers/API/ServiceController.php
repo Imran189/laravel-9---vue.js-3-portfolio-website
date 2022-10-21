@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ServiceController extends Controller
 {
@@ -26,6 +27,26 @@ class ServiceController extends Controller
         $service->icon=$request->icon;
         $service->description=$request->description;
         $service->save();
-        
+
+    }
+
+    public function update_service(Request $request, $id){
+        $service = Service::find($id);
+
+        $this->validate($request,[
+            'name'=>'required'
+        ]);
+
+        $service->name=$request->name;
+        $service->icon=$request->icon;
+        $service->description=$request->description;
+        $service->save();
+
+
+    }
+
+ public function delete_service(Request $request,$id){
+        $service= Service::findOrFail($id);
+        $service->delete();
     }
 }

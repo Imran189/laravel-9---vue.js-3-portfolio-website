@@ -5,6 +5,7 @@ import LoginView from "../components/auth/login.vue";
 import AboutView from "../components/admin/about/index.vue";
 import notFound from "../components/notFound.vue";
 import AdminService from "../components/admin/service/index.vue";
+import AdminSkills from "../components/admin/skills/index.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,7 @@ const router = createRouter({
                 requiresAuth: false,
             },
         },
+
         //admin pages
         {
             path: "/admin/home",
@@ -42,7 +44,15 @@ const router = createRouter({
                 requiresAuth: true,
             },
         },
-
+        {
+            path: "/admin/skills",
+            name: "AdminSkills",
+            component: AdminSkills,
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        //admin login
         {
             path: "/admin/login",
             name: "LoginView",

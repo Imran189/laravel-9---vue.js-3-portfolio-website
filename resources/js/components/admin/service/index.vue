@@ -7,6 +7,7 @@ let services = ref([]);
 
 const showModal = ref(false);
 const hideModal = ref(true);
+const editMode = ref(false);
 
 const form = ref({
     name: "",
@@ -28,6 +29,8 @@ const openModal = () => {
 };
 const closeModal = () => {
     showModal.value = !hideModal.value;
+    form.value = {};
+    editMode.value = false;
 };
 
 const createService = async () => {
@@ -38,6 +41,44 @@ const createService = async () => {
             icon: "success",
             title: "Service added successfully",
         });
+    });
+};
+
+const editModal = (service) => {
+    editMode.value = true;
+    showModal.value = !showModal.value;
+    form.value = service;
+};
+
+const updateService = async () => {
+    await axios
+        .post("/api/update_service/" + form.value.id, form.value)
+        .then((response) => {
+            getService();
+            closeModal();
+            toast.fire({
+                icon: "success",
+                title: "Service Updated Successfully",
+            });
+        });
+};
+
+const deleteService = (id) => {
+    Swal.fire({
+        title: "Are you sure..?",
+        text: "tou can't go back",
+        icon: "Warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes,delete it",
+    }).then((result) => {
+        if (result.value) {
+            axios.get("/api/delete_service/" + id).then(() => {
+                Swal.fire("Delete", "Service delete Successfully", "success");
+                getService();
+            });
+        }
     });
 };
 </script>
@@ -126,10 +167,16 @@ const createService = async () => {
                                 <p>{{ item.description }}</p>
 
                                 <div>
-                                    <button class="btn-icon success">
+                                    <button
+                                        class="btn-icon success"
+                                        @click="editModal(item)"
+                                    >
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="btn-icon danger">
+                                    <button
+                                        class="btn-icon danger"
+                                        @click="deleteService(item.id)"
+                                    >
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -144,10 +191,21 @@ const createService = async () => {
                                 @click="closeModal()"
                                 >×</span
                             >
-                            <h3 class="modal__title">Add Service</h3>
+                            <h3 class="modal__title" v-show="editMode == false">
+                                Add Service
+                            </h3>
+                            <h3 class="modal__title" v-show="editMode == true">
+                                update Service
+                            </h3>
                             <hr class="modal_line" />
                             <br />
-                            <form @submit.prevent="createService()">
+                            <form
+                                @submit.prevent="
+                                    editMode.value
+                                        ? createService()
+                                        : updateService()
+                                "
+                            >
                                 <div>
                                     <p>Service Name</p>
                                     <input
@@ -185,8 +243,15 @@ const createService = async () => {
                                     </button>
                                     <button
                                         class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == false"
                                     >
                                         Save
+                                    </button>
+                                    <button
+                                        class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == true"
+                                    >
+                                        Update
                                     </button>
                                 </div>
                             </form>
