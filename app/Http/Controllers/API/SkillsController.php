@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class SkillsController extends Controller
 {
     public function get_all_skills(){
-        $skills =Skills::with('service')->orderBy('id','DESC')->get();
+        $skills = Skills::with('service')->orderBy('id','DESC')->get();
         return response()->json([
             'skills'=>$skills
         ],200);
@@ -20,6 +20,18 @@ class SkillsController extends Controller
         ]);
 
         $skill= new Skills();
+        $skill->name=$request->name;
+        $skill->proficiency=$request->proficiency;
+        $skill->service_id=$request->service_id;
+        $skill->save();
+    }
+
+    public function update_skill(Request $request,$id){
+        $skill= Skills::find($id);
+        $this->validate($request,[
+            'name'=>'required'
+        ]);
+
         $skill->name=$request->name;
         $skill->proficiency=$request->proficiency;
         $skill->service_id=$request->service_id;

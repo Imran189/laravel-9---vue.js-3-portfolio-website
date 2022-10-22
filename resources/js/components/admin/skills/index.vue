@@ -59,6 +59,19 @@ const editModal = (item) => {
     form.value = item;
 };
 
+const updateSkill = async () => {
+    await axios
+        .post("/api/update_skill/" + form.value.id, form.value)
+        .then((response) => {
+            getSkills();
+            closeModal();
+            toast.fire({
+                icon: "success",
+                title: "Skills update Successfully",
+            });
+        });
+};
+
 const deleteSkill = (id) => {
     Swal.fire({
         title: "Are you sure..?",
@@ -202,7 +215,11 @@ const deleteSkill = (id) => {
                             </h3>
                             <hr class="modal_line" />
                             <br />
-                            <form @submit.prevent="createSkills()">
+                            <form
+                                @submit.prevent="
+                                    editMode ? updateSkill() : createSkills()
+                                "
+                            >
                                 <div>
                                     <p>Name</p>
                                     <input
