@@ -31,5 +31,7 @@ Route::post('/update_service/{id}','update_service');
 Route::get('/delete_service/{id}','delete_service');
 });
 Route::controller(SkillsController::class)->group(function(){
-Route::get('get_all_skills','get_all_skills');
+Route::get('/get_all_skills','get_all_skills');
+Route::post('/create_skills','create_skills');
+
 });

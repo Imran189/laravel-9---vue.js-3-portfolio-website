@@ -201,9 +201,9 @@ const deleteService = (id) => {
                             <br />
                             <form
                                 @submit.prevent="
-                                    editMode.value
-                                        ? createService()
-                                        : updateService()
+                                    !editMode.value
+                                        ? updateService()
+                                        : createService()
                                 "
                             >
                                 <div>
