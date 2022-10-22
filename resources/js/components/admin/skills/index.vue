@@ -7,6 +7,8 @@ const showModal = ref(false);
 const hideModal = ref(true);
 const services = ref([]);
 
+const editMode = ref(false);
+
 let form = ref({
     name: "",
     proficiency: "",
@@ -36,6 +38,8 @@ const openModal = () => {
 
 const closeModal = () => {
     showModal.value = !hideModal.value;
+    form.value = {};
+    editMode.value = false;
 };
 
 const createSkills = async () => {
@@ -47,6 +51,12 @@ const createSkills = async () => {
             title: "Skill add success",
         });
     });
+};
+
+const editModal = (item) => {
+    editMode.value = true;
+    showModal.value = !showModal.value;
+    form.value = item;
 };
 
 const deleteSkill = (id) => {
@@ -160,7 +170,10 @@ const deleteSkill = (id) => {
                                     {{ item.service.name }}
                                 </p>
                                 <div>
-                                    <button class="btn-icon success">
+                                    <button
+                                        class="btn-icon success"
+                                        @click="editModal(item)"
+                                    >
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
                                     <button
@@ -181,7 +194,12 @@ const deleteSkill = (id) => {
                                 @click="closeModal()"
                                 >×</span
                             >
-                            <h3 class="modal__title">Add Skill</h3>
+                            <h3 class="modal__title" v-show="editMode == false">
+                                Add Skill
+                            </h3>
+                            <h3 class="modal__title" v-show="editMode == true">
+                                Update Skill
+                            </h3>
                             <hr class="modal_line" />
                             <br />
                             <form @submit.prevent="createSkills()">
@@ -232,8 +250,15 @@ const deleteSkill = (id) => {
                                     </button>
                                     <button
                                         class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == false"
                                     >
                                         Save
+                                    </button>
+                                    <button
+                                        class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == true"
+                                    >
+                                        Update
                                     </button>
                                 </div>
                             </form>
