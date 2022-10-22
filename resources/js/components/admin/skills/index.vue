@@ -48,6 +48,25 @@ const createSkills = async () => {
         });
     });
 };
+
+const deleteSkill = (id) => {
+    Swal.fire({
+        title: "Are you sure..?",
+        text: "tou can't go back",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes,delete it",
+    }).then((result) => {
+        if (result.value) {
+            axios.get("/api/delete_skill/" + id).then(() => {
+                Swal.fire("Delete", "Skill delete Successfully", "success");
+                getSkills();
+            });
+        }
+    });
+};
 </script>
 
 <template>
@@ -144,7 +163,10 @@ const createSkills = async () => {
                                     <button class="btn-icon success">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="btn-icon danger">
+                                    <button
+                                        class="btn-icon danger"
+                                        @click.prevent="deleteSkill(item.id)"
+                                    >
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>

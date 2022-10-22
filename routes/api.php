@@ -33,5 +33,5 @@ Route::get('/delete_service/{id}','delete_service');
 Route::controller(SkillsController::class)->group(function(){
 Route::get('/get_all_skills','get_all_skills');
 Route::post('/create_skills','create_skills');
-
+Route::get('delete_skill/{id}','delete_skill');
 });

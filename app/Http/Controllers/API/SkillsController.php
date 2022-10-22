@@ -25,4 +25,9 @@ class SkillsController extends Controller
         $skill->service_id=$request->service_id;
         $skill->save();
     }
+
+    public function delete_skill(Request $request, $id){
+        $skill= Skills::findOrFail($id);
+        $skill->delete();
+    }
 }
