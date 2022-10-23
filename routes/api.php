@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AboutController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\API\EducationController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\SkillsController;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ Route::get('/delete_skill/{id}','delete_skill');
 Route::post('/update_skill/{id}','update_skill');
 });
 
-Route::controller(SkillsController::class)->group(function(){
+Route::controller(EducationController::class)->group(function(){
 Route::get('get_all_education','get_all_education');
+Route::post('create_education','create_education');
 });

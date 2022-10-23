@@ -6,6 +6,7 @@ import AboutView from "../components/admin/about/index.vue";
 import notFound from "../components/notFound.vue";
 import AdminService from "../components/admin/service/index.vue";
 import AdminSkills from "../components/admin/skills/index.vue";
+import AdminEducation from "../components/admin/education/index.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +49,14 @@ const router = createRouter({
             path: "/admin/skills",
             name: "AdminSkills",
             component: AdminSkills,
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: "/admin/education",
+            name: "AdminEducation",
+            component: AdminEducation,
             meta: {
                 requiresAuth: true,
             },
