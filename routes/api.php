@@ -3,8 +3,10 @@
 use App\Http\Controllers\API\AboutController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\API\EducationController;
+use App\Http\Controllers\API\ExperienceController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\SkillsController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,4 +45,8 @@ Route::get('/get_all_education','get_all_education');
 Route::post('/create_education','create_education');
 Route::post('/update_education/{id}','update_education');
 Route::get('/delete_education/{id}','delete_education');
+});
+
+Route::controller(ExperienceController::class)->group(function(){
+Route::get('/get_experiences','get_experiences');
 });
