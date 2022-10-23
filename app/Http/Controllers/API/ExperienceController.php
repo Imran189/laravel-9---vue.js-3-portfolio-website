@@ -29,4 +29,17 @@ class ExperienceController extends Controller
         $exp->save();
 
     }
+
+    public function update_experience(Request $request,$id){
+        $exp = Experience::find($id);
+        $exp->company=$request->company;
+        $exp->period=$request->period;
+        $exp->position=$request->position;
+        $exp->save();
+    }
+
+    public function delete_experience(Request $request,$id){
+        $exp = Experience::find($id);
+        $exp->delete();
+    }
 }

@@ -6,6 +6,8 @@ import axios from "axios";
 const showModal = ref(false);
 const hideModal = ref(true);
 
+const editMode = ref(false);
+
 const experiences = ref([]);
 let form = ref({
     company: "",
@@ -22,6 +24,7 @@ const openModal = () => {
 const closeModal = () => {
     showModal.value = !hideModal.value;
     form.value = {};
+    editMode.value = false;
 };
 
 const getExperience = async () => {
@@ -38,6 +41,48 @@ const createExperience = async () => {
             icon: "success",
             title: "Experience Added Successfully",
         });
+    });
+};
+
+const editModal = (item) => {
+    openModal();
+    form.value = item;
+    editMode.value = true;
+};
+
+const updateExperience = async () => {
+    await axios
+        .post("/api/update_experience/" + form.value.id, form.value)
+        .then((response) => {
+            getExperience();
+            closeModal();
+            toast.fire({
+                icon: "success",
+                title: "Updated successfully done",
+            });
+        });
+};
+
+const deleteExperience = (id) => {
+    Swal.fire({
+        title: "Are you sure..?",
+        text: "you can't go back",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes,delete it",
+    }).then((result) => {
+        if (result.value) {
+            axios.get("/api/delete_experience/" + id).then((response) => {
+                Swal.fire(
+                    "Delete",
+                    "Experience delete Successfully",
+                    "success"
+                );
+                getExperience();
+            });
+        }
     });
 };
 </script>
@@ -123,10 +168,16 @@ const createExperience = async () => {
                                 <p>{{ item.position }}</p>
 
                                 <div>
-                                    <button class="btn-icon success">
+                                    <button
+                                        class="btn-icon success"
+                                        @click="editModal(item)"
+                                    >
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="btn-icon danger">
+                                    <button
+                                        class="btn-icon danger"
+                                        @click="deleteExperience(item.id)"
+                                    >
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -141,10 +192,21 @@ const createExperience = async () => {
                                 @click="closeModal()"
                                 >×</span
                             >
-                            <h3 class="modal__title">Add Experience</h3>
+                            <h3 class="modal__title" v-show="editMode == false">
+                                Add Experience
+                            </h3>
+                            <h3 class="modal__title" v-show="editMode == true">
+                                Update Experience
+                            </h3>
                             <hr class="modal_line" />
                             <br />
-                            <form @submit.prevent="createExperience()">
+                            <form
+                                @submit.prevent="
+                                    editMode
+                                        ? updateExperience()
+                                        : createExperience()
+                                "
+                            >
                                 <div>
                                     <p>Company</p>
                                     <input
@@ -178,8 +240,15 @@ const createExperience = async () => {
                                     </button>
                                     <button
                                         class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == false"
                                     >
                                         Save
+                                    </button>
+                                    <button
+                                        class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == true"
+                                    >
+                                        Update
                                     </button>
                                 </div>
                             </form>
