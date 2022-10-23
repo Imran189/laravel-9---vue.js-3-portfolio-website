@@ -15,4 +15,18 @@ class ExperienceController extends Controller
             'experiences'=> $data
         ],200);
     }
+
+    public function create_experience(Request $request){
+        
+        $this->validate($request,[
+            'company'=>'required'
+        ]);
+
+        $exp= new Experience();
+        $exp->company=$request->company;
+        $exp->period=$request->period;
+        $exp->position=$request->position;
+        $exp->save();
+
+    }
 }

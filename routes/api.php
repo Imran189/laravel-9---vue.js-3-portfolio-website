@@ -49,4 +49,5 @@ Route::get('/delete_education/{id}','delete_education');
 
 Route::controller(ExperienceController::class)->group(function(){
 Route::get('/get_experiences','get_experiences');
+Route::post('/create_experience','create_experience');
 });
