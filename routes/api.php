@@ -39,6 +39,8 @@ Route::post('/update_skill/{id}','update_skill');
 });
 
 Route::controller(EducationController::class)->group(function(){
-Route::get('get_all_education','get_all_education');
-Route::post('create_education','create_education');
+Route::get('/get_all_education','get_all_education');
+Route::post('/create_education','create_education');
+Route::post('/update_education/{id}','update_education');
+Route::get('/delete_education/{id}','delete_education');
 });

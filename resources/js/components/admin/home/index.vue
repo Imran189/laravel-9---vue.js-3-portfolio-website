@@ -1,3 +1,7 @@
+<script setup>
+import Base from "../layouts/baseLayout.vue";
+</script>
+
 <template>
     <div>
         <Base />
@@ -464,9 +468,5 @@
         <footer class="footer"></footer>
     </div>
 </template>
-
-<script setup>
-import Base from "../layouts/baseLayout.vue";
-</script>
 
 <style></style>

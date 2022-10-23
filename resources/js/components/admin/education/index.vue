@@ -5,6 +5,7 @@ import axios from "axios";
 
 const showModal = ref(false);
 const hideModal = ref(true);
+const editMode = ref(false);
 
 let form = ref({
     institution: "",
@@ -18,18 +19,19 @@ onMounted(async () => {
     getEducations();
 });
 
-const getEducations = async () => {
-    let response = await axios.get("/api/get_all_education");
-    //console.log("response", response);
-    educations.value = response.data.educations;
-};
-
 const openModal = () => {
     showModal.value = !showModal.value;
 };
 const closeModal = () => {
     showModal.value = !hideModal.value;
     form.value = {};
+    editMode.value = false;
+};
+
+const getEducations = async () => {
+    let response = await axios.get("/api/get_all_education");
+    //console.log("response", response);
+    educations.value = response.data.educations;
 };
 
 const createEducation = async () => {
@@ -43,6 +45,44 @@ const createEducation = async () => {
                 title: "Education successfully Created",
             });
         });
+};
+
+const editModal = (item) => {
+    openModal();
+    editMode.value = true;
+    form.value = item;
+};
+
+const updateEducation = async () => {
+    let response = await axios
+        .post("/api/update_education/" + form.value.id, form.value)
+        .then((response) => {
+            getEducations();
+            closeModal();
+            toast.fire({
+                icon: "success",
+                title: "Updated successfully done",
+            });
+        });
+};
+
+const deleteEducation = (id) => {
+    Swal.fire({
+        title: "Are you sure..?",
+        text: "you can't go back",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes,delete it",
+    }).then((result) => {
+        if (result.value) {
+            axios.get("/api/delete_education/" + id).then(() => {
+                Swal.fire("Delete", "Education delete Successfully", "success");
+                getEducations();
+            });
+        }
+    });
 };
 </script>
 
@@ -130,10 +170,16 @@ const createEducation = async () => {
                                 <p>{{ item.degree }}</p>
                                 <p>{{ item.department }}</p>
                                 <div>
-                                    <button class="btn-icon success">
+                                    <button
+                                        class="btn-icon success"
+                                        @click="editModal(item)"
+                                    >
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="btn-icon danger">
+                                    <button
+                                        class="btn-icon danger"
+                                        @click="deleteEducation(item.id)"
+                                    >
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -148,10 +194,21 @@ const createEducation = async () => {
                                 @click="closeModal()"
                                 >×</span
                             >
-                            <h3 class="modal__title">Add Education</h3>
+                            <h3 class="modal__title" v-show="editMode == false">
+                                Add Education
+                            </h3>
+                            <h3 class="modal__title" v-show="editMode == true">
+                                Update Education
+                            </h3>
                             <hr class="modal_line" />
                             <br />
-                            <form @submit.prevent="createEducation()">
+                            <form
+                                @submit.prevent="
+                                    editMode
+                                        ? updateEducation()
+                                        : createEducation()
+                                "
+                            >
                                 <div>
                                     <p>Institution</p>
                                     <input
@@ -192,8 +249,15 @@ const createEducation = async () => {
                                     </button>
                                     <button
                                         class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == false"
                                     >
                                         Save
+                                    </button>
+                                    <button
+                                        class="btn btn-secondary btn__close--modal"
+                                        v-show="editMode == true"
+                                    >
+                                        Update
                                     </button>
                                 </div>
                             </form>
