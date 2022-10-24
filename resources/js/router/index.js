@@ -8,6 +8,7 @@ import AdminService from "../components/admin/service/index.vue";
 import AdminSkills from "../components/admin/skills/index.vue";
 import AdminEducation from "../components/admin/education/index.vue";
 import AdminExperience from "../components/admin/experience/index.vue";
+import adminProject from "../components/admin/projects/index.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,6 +67,14 @@ const router = createRouter({
             path: "/admin/experience",
             name: "AdminExperience",
             component: AdminExperience,
+            meta: {
+                requiresAuth: true,
+            },
+        },
+        {
+            path: "/admin/projects",
+            name: "adminProject",
+            component: adminProject,
             meta: {
                 requiresAuth: true,
             },
